@@ -4,6 +4,7 @@ import { DeletePostInputDTO } from "../dtos/Posts/DeletePostDTO";
 import { EditPostInputDTO } from "../dtos/Posts/EditPostDTO";
 import { GetPostsInputDTO, GetPostsOutputDTO } from "../dtos/Posts/GetPostsDTO";
 import { LikePostInputDTO } from "../dtos/Posts/LikePostDTO";
+import { VerifyLikeInputDTO } from "../dtos/Posts/VerifyLikeDTO";
 import { BadRequestError } from "../errors/BadRequestError";
 import { Post, PostDB, PostModel } from "../models/Posts";
 import { USER_ROLES, UserDB } from "../models/User";
@@ -189,9 +190,9 @@ export class PostBusiness {
             throw new BadRequestError("Não existe nenhum post com esse id")
         }
 
-        const isLiked = await this.postDatabase.verifyLike(id, payload.id)
+        let isLiked = await this.postDatabase.verifyLike(id, payload.id)
 
-        console.log(isLiked)
+        // console.log(isLiked)
 
         let likesNumber = postDB.likes
         let dislikesNumber = postDB.dislikes
@@ -200,41 +201,72 @@ export class PostBusiness {
 
 
             if (isLiked === 1) {
-                throw new BadRequestError("O usuário já deu like esse post")
+                likesNumber = postDB.likes - 1
+                // throw new BadRequestError("O usuário já deu like esse post")//Mudar aqui pra ter como tirar o like
+                isLiked = 3 // se o usuário retira o like, o isLiked volta a ser 2, retratando um post que teve a interação retirada
             }
 
             if (isLiked === 0) {
                 likesNumber = postDB.likes + 1
                 dislikesNumber = postDB.dislikes - 1
+                isLiked = 1
             }
             else if (isLiked === 2) {
                 likesNumber = postDB.likes + 1
-                dislikesNumber = 0
+                isLiked = 1
+                // dislikesNumber = postDB.dislikes
             }
 
             // const alreadyLiked = 1
 
-            await this.postDatabase.likePost(likesNumber, dislikesNumber, id, payload.id, like)
+            await this.postDatabase.likePost(likesNumber, dislikesNumber, id, payload.id, isLiked)
+
+            return isLiked
+
         }
 
         else if (!like) {
             if (isLiked === 0) {
-                throw new BadRequestError("O usuário já deu dislike esse post")
+                dislikesNumber = postDB.dislikes - 1
+                isLiked = 3 // se o usuário retira o like, o isLiked volta a ser 2, retratando um post que teve a interação retirada
+                // throw new BadRequestError("O usuário já deu dislike esse post")
             }
 
             if (isLiked === 1) {
                 likesNumber = postDB.likes - 1
                 dislikesNumber = postDB.dislikes + 1
+                isLiked = 0
             }
             else if (isLiked === 2) {
                 likesNumber = 0
                 dislikesNumber = postDB.dislikes + 1
+                isLiked = 0
             }
 
 
-            await this.postDatabase.dislikePost(likesNumber, dislikesNumber, id, payload.id, like)
+            await this.postDatabase.dislikePost(likesNumber, dislikesNumber, id, payload.id, isLiked)
 
+
+            return isLiked
 
         }
+    }
+
+    public verifyLike = async (input: VerifyLikeInputDTO) => {
+
+        const { id, token} = input
+
+
+        const payload = this.tokenManager.getPayload(token)
+
+        console.log(payload)
+
+        if (!payload) {
+            throw new BadRequestError("Token inválido")
+        }
+
+        const likeSituation = await this.postDatabase.verifyLike(id, payload.id)
+
+        return likeSituation
     }
 }

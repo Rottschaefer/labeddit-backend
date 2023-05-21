@@ -33,6 +33,9 @@ CREATE TABLE posts (
 
   SELECT * FROM posts;
 
+DELETE FROM posts WHERE (id = "a9c9a69e-e554-4981-a2e6-234bec2e9343");
+
+
   CREATE TABLE likes_dislikes (
     user_id TEXT NOT NULL,
     post_id TEXT NOT NULL,
@@ -42,7 +45,6 @@ CREATE TABLE posts (
   );
 
 -- DROP TABLE likes_dislikes;
-
 
 SELECT * FROM likes_dislikes;
 

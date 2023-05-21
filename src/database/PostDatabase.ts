@@ -32,17 +32,25 @@ export class PostDatabase extends BaseDatabase {
         await BaseDatabase.connection(PostDatabase.TABLE_POSTS).delete().where({ id })
     }
 
-    public likePost = async (likesNumber: number, dislikesNumber: number, post_id: string, user_id: string, like: boolean) => {
+    public likePost = async (likesNumber: number, dislikesNumber: number, post_id: string, user_id: string, isLiked:number) => {
 
             await BaseDatabase.connection(PostDatabase.TABLE_POSTS).update({ likes: likesNumber, dislikes: dislikesNumber }).where({ id: post_id })
+
+            if(isLiked === 3){
+                await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).delete().where({ post_id, user_id })
+            }
 
             await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).update({ like: 1 }).where({ post_id, user_id })
         
     }
 
-    public dislikePost = async (likesNumber: number, dislikesNumber: number, post_id: string, user_id: string, like: boolean) => {
+    public dislikePost = async (likesNumber: number, dislikesNumber: number, post_id: string, user_id: string, isLiked: number) => {
    
             await BaseDatabase.connection(PostDatabase.TABLE_POSTS).update({ likes: likesNumber, dislikes: dislikesNumber }).where({ id: post_id })
+
+            if(isLiked === 3){
+                await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).delete().where({ post_id, user_id })
+            }
 
             await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).update({ like: 0 }).where({ post_id, user_id })
 

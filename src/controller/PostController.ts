@@ -7,6 +7,7 @@ import { CreatePostSchema } from "../dtos/Posts/CreatePostDTO";
 import { EditPostInputSchema } from "../dtos/Posts/EditPostDTO";
 import { DeletePostInputSchema } from "../dtos/Posts/DeletePostDTO";
 import { LikePostInputSchema } from "../dtos/Posts/LikePostDTO";
+import { VerifyLikeInputSchema } from "../dtos/Posts/VerifyLikeDTO";
 
 
 export class PostController {
@@ -139,9 +140,42 @@ export class PostController {
                 like: req.body.like
             })
 
-            await this.postBusiness.likePost(input)
+            const isLiked = await this.postBusiness.likePost(input)
 
-            res.status(200).send()
+            res.status(200).send({isLiked: isLiked})
+
+        }
+        catch (error) {
+
+            console.log(error)
+            if (error instanceof ZodError) {
+                res.status(400).send(error.issues)
+            }
+
+            else if (error instanceof BaseError) {
+                res.status(error.statusCode).send(error.message)
+            } else {
+                res.status(500).send("Erro inesperado")
+            }
+        }
+    }
+
+    public verifyLike = async (req: Request, res: Response) => {
+
+        try {
+
+            console.log("ched")
+
+
+            const input = VerifyLikeInputSchema.parse({
+                id: req.params.id,
+                token: req.headers.authorization
+            })
+
+
+            const likeSituation = await this.postBusiness.verifyLike(input)
+
+            res.status(200).send({likeSituation})
 
         }
         catch (error) {

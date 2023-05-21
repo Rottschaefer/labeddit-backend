@@ -20,7 +20,7 @@ export const CreatePostSchema = z.object({
     content: z.string({
         required_error: "'content' é obrigatório",
         invalid_type_error: "'content' precisa ser uma string"
-    }).min(1, "'content' deve ter pelo menos 1 caractere"),
+    }).min(1, "O conteúdo do post deve ter pelo menos 1 caractere"),
     token: z.string({
         required_error: "É necessário um token para acessar a requisição createPost"
     }).min(1)
