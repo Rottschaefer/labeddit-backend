@@ -33,7 +33,7 @@ CREATE TABLE posts (
 
   SELECT * FROM posts;
 
-DELETE FROM posts WHERE (id = "a9c9a69e-e554-4981-a2e6-234bec2e9343");
+DELETE FROM posts WHERE (id = "8ed12806-e24a-46b7-b2f3-dfc6e581c356");
 
 
   CREATE TABLE likes_dislikes (
@@ -49,3 +49,32 @@ DELETE FROM posts WHERE (id = "a9c9a69e-e554-4981-a2e6-234bec2e9343");
 SELECT * FROM likes_dislikes;
 
 -- DROP TABLE likes_dislikes;
+
+
+CREATE TABLE comments (
+    id TEXT UNIQUE NOT NULL,
+    post_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    likes INTEGER NOT NULL,
+    dislikes INTEGER NOT NULL,
+    created_at TEXT DEFAULT(DATETIME()) NOT NULL,
+    updated_at TEXT DEFAULT(DATETIME()) NOT NULL,
+    Foreign Key (user_id) REFERENCES users(id),
+    Foreign Key (post_id) REFERENCES posts(id)
+  );
+
+  SELECT * FROM comments;
+
+  -- DROP TABLE comments;
+
+
+CREATE TABLE comments_likes_dislikes (
+    user_id TEXT NOT NULL,
+    comment_id TEXT NOT NULL,
+    like INTEGER NOT NULL,
+    Foreign Key (user_id) REFERENCES users(id),
+    Foreign Key (comment_id) REFERENCES comments(id)
+  );
+
+  SELECT * FROM comments_likes_dislikes;

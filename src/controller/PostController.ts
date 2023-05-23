@@ -164,8 +164,6 @@ export class PostController {
 
         try {
 
-            console.log("ched")
-
 
             const input = VerifyLikeInputSchema.parse({
                 id: req.params.id,

@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { userRouter } from './router/UserRouter'
 import { postRouter } from './router/PostRouter'
+import {commentRouter } from './router/CommentsRouter'
 
 const app = express()
 
@@ -16,3 +17,5 @@ app.listen(3003, () => {
 app.use("/users", userRouter)
 
 app.use("/posts", postRouter)
+
+app.use("/comments", commentRouter)

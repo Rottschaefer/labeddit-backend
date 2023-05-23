@@ -16,7 +16,7 @@ const postController = new PostController(
 )
 
 postRouter.get("/", postController.getPosts)
-postRouter.get("/:id/aqui", postController.verifyLike)
+postRouter.get("/:id/verify-like", postController.verifyLike)
 
 postRouter.post("/", postController.createPost)
 postRouter.put("/:id", postController.editPost)
