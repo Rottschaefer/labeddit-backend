@@ -46,6 +46,14 @@ export class PostBusiness {
 
             const creator: UserDB = usersDB.find((userDB) => userDB.id === post.getCreatorId())
 
+            let isTheCreator = false
+            if(post.getCreatorId() === payload.id){
+                isTheCreator = true
+            }
+
+            // console.log(isTheCreator)
+            
+
             return ({
                 id: post.getId(),
                 // creatorId: post.getCreatorId(),
@@ -56,7 +64,8 @@ export class PostBusiness {
                 updatedAt: post.getUpdatedAt(),
                 creator: {
                     id: creator.id,
-                    name: creator.name
+                    name: creator.name,
+                    isTheCreator: isTheCreator
                 }
             })
         })
@@ -143,7 +152,7 @@ export class PostBusiness {
 
         const [posts] = await this.postDatabase.getPosts()
 
-        let postDB = []
+        let postDB
 
         if (payload.role === USER_ROLES.NORMAL) {
             postDB = posts.find((post) => { return (post.id === id && post.creator_id === payload.id) })
@@ -259,7 +268,7 @@ export class PostBusiness {
 
         const payload = this.tokenManager.getPayload(token)
 
-        console.log(payload)
+        // console.log(payload)
 
         if (!payload) {
             throw new BadRequestError("Token inválido")

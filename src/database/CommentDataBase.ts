@@ -5,13 +5,16 @@ import { BaseDatabase } from "./BaseDatabase"
 export class CommentDatabase extends BaseDatabase {
     public static TABLE_COMMENTS = "comments"
     public static TABLE_COMMENTS_LIKES_DISLIKES = "comments_likes_dislikes"
+    public static TABLE_USERS = "users"
 
     public getCommentsByPostId = async (input : any) => {
         
         const comments = await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS).where({post_id: input.postId})
 
-        console.log(comments)
-        return comments
+        const users = await BaseDatabase.connection(CommentDatabase.TABLE_USERS)
+
+        // console.log(comments)
+        return [comments, users]
     }
 
     public createComment = async (newComment: CommentDB) => {
@@ -20,8 +23,10 @@ export class CommentDatabase extends BaseDatabase {
     }
 
     public likeComment = async (likesNumber: number, dislikesNumber: number, id: string, userId: string, isLiked:number) => {
+
+        console.log(likesNumber)
         
-        await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS).update({likes: likesNumber, dislikes: dislikesNumber}).where({id, user_id: userId})
+        await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS).update({likes: likesNumber, dislikes: dislikesNumber}).where({id})
 
             if(isLiked === 3){
                 await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS_LIKES_DISLIKES).delete().where({comment_id: id, user_id: userId})
@@ -32,7 +37,7 @@ export class CommentDatabase extends BaseDatabase {
 
     public dislikeComment = async (likesNumber: number, dislikesNumber: number, id: string, userId: string, isLiked:number) => {
         
-        await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS).update({likes: likesNumber, dislikes: dislikesNumber}).where({id, user_id: userId})
+        await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS).update({likes: likesNumber, dislikes: dislikesNumber}).where({id})
 
             if(isLiked === 3){
                 await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS_LIKES_DISLIKES).delete().where({comment_id: id, user_id: userId})

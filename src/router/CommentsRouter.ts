@@ -17,6 +17,8 @@ const commentController = new CommentController(
 )
 
 commentRouter.get("/:id", commentController.getComments)
+commentRouter.get("/:id/verify-like", commentController.verifyLike)
+
 commentRouter.post("/:id", commentController.createComments)
 
 commentRouter.put("/:id/like", commentController.likePost)

@@ -2,9 +2,11 @@ import { CommentDatabase } from "../database/CommentDataBase";
 import { CreateCommentInputDTO } from "../dtos/Comments/createCommentDTO";
 import { GetCommentsInputDTO } from "../dtos/Comments/getCommentsDTO";
 import { LikeCommentInputDTO } from "../dtos/Comments/likeCommentDTO";
+import { VerifyLikeInputDTO } from "../dtos/Posts/VerifyLikeDTO";
 import { BadRequestError } from "../errors/BadRequestError";
 import { CommentDB } from "../models/Comments";
 import { Comment } from "../models/Comments";
+import { UserDB } from "../models/User";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
 
@@ -14,64 +16,71 @@ export class CommentBusiness {
         private commentDatabase: CommentDatabase,
         private idGenerator: IdGenerator,
         private tokenManager: TokenManager
-        ){}
+    ) { }
 
-        public getCommentsByPostId = async (input: GetCommentsInputDTO) => {
+    public getCommentsByPostId = async (input: GetCommentsInputDTO) => {
 
-            const payload = this.tokenManager.getPayload(input.token)
+        const payload = this.tokenManager.getPayload(input.token)
 
-            if(!payload){
-                throw new BadRequestError("Token inválido")
-            }
-
-            const comments = await this.commentDatabase.getCommentsByPostId(input)
-
-            const commentsWithUserName = comments.map((comment)=>{return {...comment, name: payload.name}})
-
-            return commentsWithUserName
+        if (!payload) {
+            throw new BadRequestError("Token inválido")
         }
 
-        public createComment = async (input: CreateCommentInputDTO) => {
+        const [comments, users] = await this.commentDatabase.getCommentsByPostId(input)
+
+        const commentsWithUserName = comments.map((comment) => {
+
+            const userOfThisComment: UserDB[] = users.filter((user) => { return (comment.user_id === user.id) })
+
+            // console.log(userOfThisComment)
+            return { ...comment, name: userOfThisComment[0].name }
+        })
+
+        console.log(commentsWithUserName)
+        return commentsWithUserName
+    }
+
+    public createComment = async (input: CreateCommentInputDTO) => {
 
 
-            const {token, postId, content} = input
-    
-            const payload = this.tokenManager.getPayload(token)
-        
-            if (!payload) {
-                throw new BadRequestError("Token inválido")
-            }
-    
-            const id = this.idGenerator.generate()
-    
-            const newComment = new Comment(
-                id,
-                postId,
-                payload.id,
-                content,
-                0,
-                0,
-                new Date().toISOString(),
-                new Date().toISOString()
-            )
-    
-            const newCommentDB: CommentDB = {
-                id: newComment.getId(),
-                post_id: newComment.getPostId(),
-                user_id: newComment.getUserId(),
-                content: newComment.getContent(),
-                likes: newComment.getLikes(),
-                dislikes: newComment.getDislikes(),
-                created_at: newComment.getCreatedAt(),
-                updated_at: newComment.getUpdatedAt()
-            }
-    
-            this.commentDatabase.createComment(newCommentDB)
-    
+        const { token, postId, content } = input
+
+        const payload = this.tokenManager.getPayload(token)
+
+        if (!payload) {
+            throw new BadRequestError("Token inválido")
         }
 
-        public likeComment = async (input: LikeCommentInputDTO) => {
-            const { id, postId, token, like } = input
+        const id = this.idGenerator.generate()
+
+        const newComment = new Comment(
+            id,
+            postId,
+            payload.id,
+            content,
+            0,
+            0,
+            new Date().toISOString(),
+            new Date().toISOString()
+        )
+
+        const newCommentDB: CommentDB = {
+            id: newComment.getId(),
+            post_id: newComment.getPostId(),
+            user_id: newComment.getUserId(),
+            content: newComment.getContent(),
+            likes: newComment.getLikes(),
+            dislikes: newComment.getDislikes(),
+            created_at: newComment.getCreatedAt(),
+            updated_at: newComment.getUpdatedAt()
+        }
+
+        this.commentDatabase.createComment(newCommentDB)
+
+    }
+
+    public likeComment = async (input: LikeCommentInputDTO) => {
+        const { id, postId, token, like } = input
 
 
         const payload = this.tokenManager.getPayload(token)
@@ -81,12 +90,14 @@ export class CommentBusiness {
             throw new BadRequestError("Token inválido")
         }
 
-        const comments = await this.commentDatabase.getCommentsByPostId({postId})
+        const [comments] = await this.commentDatabase.getCommentsByPostId({ postId })
 
-        const commentDB = comments.find((comment: CommentDB) => { return (comment.id === id) })
+        const [commentDB] = comments.filter((comment: CommentDB) => { return (comment.id === id) })
 
         if (commentDB) {
-            const isYourComment = comments.find((comment: CommentDB) => { return (comment.id === id && comment.user_id === payload.id) })
+            const [isYourComment] = comments.filter((comment: CommentDB) => { return (comment.id === id && comment.user_id === payload.id) })
+
+            console.log(isYourComment)
 
             if (isYourComment) {
                 throw new BadRequestError("Não é possível dar like ou dislike no próprio comentário")
@@ -158,5 +169,23 @@ export class CommentBusiness {
             return isLiked
 
         }
+    }
+
+    public verifyLike = async (input: VerifyLikeInputDTO) => {
+
+        const { id, token } = input
+
+
+        const payload = this.tokenManager.getPayload(token)
+
+        console.log(payload)
+
+        if (!payload) {
+            throw new BadRequestError("Token inválido")
         }
+
+        const likeSituation = await this.commentDatabase.verifyLike(id, payload.id)
+
+        return likeSituation
+    }
 }

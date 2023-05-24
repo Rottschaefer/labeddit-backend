@@ -112,7 +112,7 @@ export class PostController {
 
             await this.postBusiness.deletePost(input)
 
-            res.status(200).send()
+            res.status(200).send("Post deletado")
 
         }
         catch (error) {

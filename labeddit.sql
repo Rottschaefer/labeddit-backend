@@ -1,4 +1,4 @@
--- Active: 1684503457069@@127.0.0.1@3306
+-- Active: 1684964451429@@127.0.0.1@3306
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE users (
     created_at TEXT DEFAULT(DATETIME()) NOT NULL
 );
 
-DELETE FROM users WHERE (email = "rottschaefer54@gmail.com");
+-- DELETE FROM users WHERE (email = "rottschaefer54@gmail.com");
 
 INSERT INTO users (id, name, email, password, role)
 VALUES("u001","EDU","rott@gmail","12345","admin");
@@ -33,7 +33,7 @@ CREATE TABLE posts (
 
   SELECT * FROM posts;
 
-DELETE FROM posts WHERE (id = "8ed12806-e24a-46b7-b2f3-dfc6e581c356");
+-- DELETE FROM posts WHERE (id = "8ed12806-e24a-46b7-b2f3-dfc6e581c356");
 
 
   CREATE TABLE likes_dislikes (
@@ -41,7 +41,7 @@ DELETE FROM posts WHERE (id = "8ed12806-e24a-46b7-b2f3-dfc6e581c356");
     post_id TEXT NOT NULL,
     like INTEGER NOT NULL,
     Foreign Key (user_id) REFERENCES users(id),
-    Foreign Key (post_id) REFERENCES posts(id)
+    Foreign Key (post_id) REFERENCES posts(id) ON DELETE CASCADE
   );
 
 -- DROP TABLE likes_dislikes;
@@ -61,7 +61,7 @@ CREATE TABLE comments (
     created_at TEXT DEFAULT(DATETIME()) NOT NULL,
     updated_at TEXT DEFAULT(DATETIME()) NOT NULL,
     Foreign Key (user_id) REFERENCES users(id),
-    Foreign Key (post_id) REFERENCES posts(id)
+    Foreign Key (post_id) REFERENCES posts(id) ON DELETE CASCADE
   );
 
   SELECT * FROM comments;
@@ -74,7 +74,9 @@ CREATE TABLE comments_likes_dislikes (
     comment_id TEXT NOT NULL,
     like INTEGER NOT NULL,
     Foreign Key (user_id) REFERENCES users(id),
-    Foreign Key (comment_id) REFERENCES comments(id)
+    Foreign Key (comment_id) REFERENCES comments(id) ON DELETE CASCADE
   );
 
   SELECT * FROM comments_likes_dislikes;
+
+    -- DROP TABLE comments_likes_dislikes;

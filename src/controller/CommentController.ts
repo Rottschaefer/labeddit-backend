@@ -5,6 +5,7 @@ import { ZodError } from "zod";
 import { BaseError } from "../errors/BaseError";
 import { GetCommentsSchema } from "../dtos/Comments/getCommentsDTO";
 import { LikeCommentInputSchema } from "../dtos/Comments/likeCommentDTO";
+import { VerifyLikeInputSchema } from "../dtos/Posts/VerifyLikeDTO";
 
 
 export class CommentController {
@@ -61,8 +62,8 @@ export class CommentController {
         try {
 
             const input = LikeCommentInputSchema.parse({
-                id: req.body.id,
-                postId: req.params.id,
+                id: req.params.id,
+                postId: req.body.postId,
                 token: req.headers.authorization,
                 like: req.body.like
             })
@@ -70,6 +71,37 @@ export class CommentController {
             const isLiked = await this.commentBusiness.likeComment(input)
 
             res.status(200).send({isLiked: isLiked})
+
+        }
+        catch (error) {
+
+            console.log(error)
+            if (error instanceof ZodError) {
+                res.status(400).send(error.issues)
+            }
+
+            else if (error instanceof BaseError) {
+                res.status(error.statusCode).send(error.message)
+            } else {
+                res.status(500).send("Erro inesperado")
+            }
+        }
+    }
+
+    public verifyLike = async (req: Request, res: Response) => {
+
+        try {
+
+
+            const input = VerifyLikeInputSchema.parse({
+                id: req.params.id,
+                token: req.headers.authorization
+            })
+
+
+            const likeSituation = await this.commentBusiness.verifyLike(input)
+
+            res.status(200).send({likeSituation})
 
         }
         catch (error) {
