@@ -70,6 +70,8 @@ export class PostBusiness {
             })
         })
 
+        // console.log(output)
+
         return output
     }
 
@@ -110,6 +112,8 @@ export class PostBusiness {
 
         this.postDatabase.createPost(newPostDB)
 
+        return {content} //Para os testes
+
     }
 
     public editPost = async (input: EditPostInputDTO) => {
@@ -126,7 +130,6 @@ export class PostBusiness {
 
         const [posts] = await this.postDatabase.getPosts()
 
-        console.log(content)
 
 
         const postDB = posts.find((post) => { return (post.id === id && post.creator_id === payload.id) })
@@ -135,7 +138,11 @@ export class PostBusiness {
             throw new BadRequestError("Este usuário não possui nenhum post com esse id")
         }
 
-        await this.postDatabase.editPost(id, content)
+        const updatedPosts = await this.postDatabase.editPost(id, content)
+
+        console.log(updatedPosts)
+
+        return updatedPosts  // Para os testes
     }
 
     public deletePost = async (input: DeletePostInputDTO) => {
