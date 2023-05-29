@@ -2,7 +2,6 @@ import z from "zod";
 
 
 export interface CreatePostInputDTO{
-    // creator_id: string,
     content: string,
     token: string
 }
@@ -12,11 +11,6 @@ export interface CreatePostOutputDTO{
 }
 
 export const CreatePostSchema = z.object({
-    // creator_id: z.string({
-    //     required_error: "'creator_id' é obrigatório",
-    //     invalid_type_error: "'creator_id' precisa ser uma string"
-    // }).min(36,
-    //     "'creator_id' deve ter 36 carecteres"),
     content: z.string({
         required_error: "'content' é obrigatório",
         invalid_type_error: "'content' precisa ser uma string"

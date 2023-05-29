@@ -32,11 +32,9 @@ export class CommentBusiness {
 
             const userOfThisComment: UserDB[] = users.filter((user) => { return (comment.user_id === user.id) })
 
-            // console.log(userOfThisComment)
             return { ...comment, name: userOfThisComment[0].name }
         })
 
-        console.log(commentsWithUserName)
         return commentsWithUserName
     }
 
@@ -97,8 +95,6 @@ export class CommentBusiness {
         if (commentDB) {
             const [isYourComment] = comments.filter((comment: CommentDB) => { return (comment.id === id && comment.user_id === payload.id) })
 
-            console.log(isYourComment)
-
             if (isYourComment) {
                 throw new BadRequestError("Não é possível dar like ou dislike no próprio comentário")
             }
@@ -111,7 +107,6 @@ export class CommentBusiness {
 
         let isLiked = await this.commentDatabase.verifyLike(id, payload.id)
 
-        // console.log(isLiked)
 
         let likesNumber = commentDB.likes
         let dislikesNumber = commentDB.dislikes
@@ -121,8 +116,7 @@ export class CommentBusiness {
 
             if (isLiked === 1) {
                 likesNumber = commentDB.likes - 1
-                // throw new BadRequestError("O usuário já deu like esse post")//Mudar aqui pra ter como tirar o like
-                isLiked = 3 // se o usuário retira o like, o isLiked volta a ser 2, retratando um post que teve a interação retirada
+                isLiked = 3 // se o usuário retira o like, o isLiked vai para 3, retratando um post que teve a interação retirada
             }
 
             if (isLiked === 0) {
@@ -133,10 +127,8 @@ export class CommentBusiness {
             else if (isLiked === 2) {
                 likesNumber = commentDB.likes + 1
                 isLiked = 1
-                // dislikesNumber = postDB.dislikes
             }
 
-            // const alreadyLiked = 1
 
             await this.commentDatabase.likeComment(likesNumber, dislikesNumber, id, payload.id, isLiked)
 
@@ -147,6 +139,7 @@ export class CommentBusiness {
         else if (!like) {
             if (isLiked === 0) {
                 dislikesNumber = commentDB.dislikes - 1
+
                 isLiked = 3 // se o usuário retira o like, o isLiked volta a ser 2, retratando um post que teve a interação retirada
                 // throw new BadRequestError("O usuário já deu dislike esse post")
             }
@@ -177,8 +170,6 @@ export class CommentBusiness {
 
 
         const payload = this.tokenManager.getPayload(token)
-
-        console.log(payload)
 
         if (!payload) {
             throw new BadRequestError("Token inválido")

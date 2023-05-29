@@ -47,16 +47,13 @@ export class PostBusiness {
             const creator: UserDB = usersDB.find((userDB) => userDB.id === post.getCreatorId())
 
             let isTheCreator = false
-            if(post.getCreatorId() === payload.id){
+            if (post.getCreatorId() === payload.id) {
                 isTheCreator = true
             }
 
-            // console.log(isTheCreator)
-            
 
             return ({
                 id: post.getId(),
-                // creatorId: post.getCreatorId(),
                 content: post.getContent(),
                 likes: post.getLikes(),
                 dislikes: post.getDislikes(),
@@ -76,7 +73,7 @@ export class PostBusiness {
     public createPost = async (input: CreatePostInputDTO) => {
 
 
-        const {content, token } = input
+        const { content, token } = input
 
         const payload = this.tokenManager.getPayload(token)
 
@@ -110,6 +107,8 @@ export class PostBusiness {
 
         this.postDatabase.createPost(newPostDB)
 
+        return { content } //Para os testes
+
     }
 
     public editPost = async (input: EditPostInputDTO) => {
@@ -126,16 +125,15 @@ export class PostBusiness {
 
         const [posts] = await this.postDatabase.getPosts()
 
-        console.log(content)
-
-
         const postDB = posts.find((post) => { return (post.id === id && post.creator_id === payload.id) })
 
         if (!postDB) {
             throw new BadRequestError("Este usuário não possui nenhum post com esse id")
         }
 
-        await this.postDatabase.editPost(id, content)
+        const updatedPosts = await this.postDatabase.editPost(id, content)
+
+        return updatedPosts  // Para os testes
     }
 
     public deletePost = async (input: DeletePostInputDTO) => {
@@ -201,8 +199,6 @@ export class PostBusiness {
 
         let isLiked = await this.postDatabase.verifyLike(id, payload.id)
 
-        // console.log(isLiked)
-
         let likesNumber = postDB.likes
         let dislikesNumber = postDB.dislikes
 
@@ -263,12 +259,10 @@ export class PostBusiness {
 
     public verifyLike = async (input: VerifyLikeInputDTO) => {
 
-        const { id, token} = input
+        const { id, token } = input
 
 
         const payload = this.tokenManager.getPayload(token)
-
-        // console.log(payload)
 
         if (!payload) {
             throw new BadRequestError("Token inválido")

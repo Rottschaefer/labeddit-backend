@@ -16,7 +16,6 @@ interface Creator {
 
 export interface GetPostsOutputDTO{
     id: string,
-    // creatorId: string,
     content: string,
     likes: number,
     dislikes: number,

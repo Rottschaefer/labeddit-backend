@@ -31,15 +31,6 @@ export class UserBusiness {
             return user.toBusinessModel()
         })
 
-        // const output = users.map((user) => ({
-        //     id: user.getId(),
-        //     name: user.getName(),
-        //     email: user.getEmail(),
-        //     password: user.getPassword(),
-        //     role: user.getRole(),
-        //     created_at: user.getCreatedAt()
-        // }))
-
         const output = users
 
         return output

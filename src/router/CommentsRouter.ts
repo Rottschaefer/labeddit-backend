@@ -13,7 +13,7 @@ const commentController = new CommentController(
         new CommentDatabase,
         new IdGenerator,
         new TokenManager
-    )
+    ) 
 )
 
 commentRouter.get("/:id", commentController.getComments)
