@@ -9,7 +9,7 @@
 
 ##  🕵Sobre
 
-Neste repositório você encontra uma rede social do estilo Reddit com a marca visual da Labenu, escola onde me formei como desenvolvedor Full-Stack. Este é o repositório do Back-End deste projeto e o repositório para o Front-End se encontra no seguinte link: https://github.com/Rottschaefer/LabEddit
+Neste repositório você encontra a API para uma rede social do estilo Reddit com a marca visual da Labenu, escola onde me formei como desenvolvedor Full-Stack. Este é o repositório do Back-End deste projeto e o repositório para o Front-End se encontra no seguinte link: https://github.com/Rottschaefer/LabEddit
 
 
 ##  👩🏾Quem Faz 
@@ -50,10 +50,10 @@ Esta é um projeto de Full-Stack, desenvolvido no bootcamp da Labenu, cujo o pri
 ## ☑️Requisitos de Funcionalidade
 
 - [x] Endpoints seguindo as boas práticas HTTP
-- [ ] Uso do ExpressJS, Typescript e SQLite
-- [ ] Cobertura de testes
-- [ ] Documentação POSTMAN
-- [ ] API deployada
+- [x] Uso do ExpressJS, Typescript e SQLite
+- [x] Cobertura de testes
+- [x] Documentação POSTMAN
+- [x] API deployada
 
 
 ## 💡Concepção do Projeto
@@ -66,29 +66,26 @@ Para esse projeto são modeladas três tabelas principais : **Usuários (users),
 
 → Comentários - id, id do post no qual foi feito o comentário, id do usuário que o criou, conteúdo, likes, dislikes e horário de criação.
 
-![Untitled](./dataBaseModel)
+![Modelo da Base de dados](./dataBaseModel.png)
 
 
 ---
 
 ## 🔗Link para Acessar
 
-- **Link do Surge:** ~~COLOCAR AQUI O LINK DO SURGE~~
+- **Caminho para utilizar a API via requisições HTTP:** https://labeddit-backend-npai.onrender.com
 
 ---
 
 
 ## 🛰Rodando o Projeto
 
-~~EXPLICAR AQUI O PASSO A PASSO PARA CONSEGUIR RODAR E ACESSAR O PROJETO.~~
-
-Para Rodar o projeto, siga as seguintes etapas :
-
-- COLOCAR A ETAPA 1
-- COLOCAR A ETAPA 2
-- COLOCAR A ETAPA 3
-
-
+- Faça um clone deste repositório em sua máquina com o comando git clone https://github.com/Rottschaefer/labook-backend
+- Abra o arquivo do projeto pelo terminal
+- Execute o comando npm install
+- Execute o comando npm run dev
+- Pronto! Agora a aplicação já está rodando em sua máquina :)
+- Aproveite o Projeto :)
 ---
 
 ## 📝Sobre a Licença
