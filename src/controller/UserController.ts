@@ -14,7 +14,6 @@ export class UserController {
         try {
             const users = await this.userBusiness.getUsers()
 
-            // res.status(200).send(users)
             res.status(200).send(users)
 
         }

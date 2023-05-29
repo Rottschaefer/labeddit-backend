@@ -24,7 +24,6 @@ describe("Testando editPosts", ()=>{
 
         const updatedPosts = await postBusiness.getPosts({token: "token-mock-fulano"})
 
-        // console.log(postsMock)
 
         expect(updatedPosts).toEqual([{
             id: "id-mock-post-fulano",

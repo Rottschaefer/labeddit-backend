@@ -3,7 +3,7 @@ import { BaseDatabase } from "../../src/database/BaseDatabase";
 import { usersMock } from "../mocks/UserDataBaseMock"
 
 
-export const postsMock: PostDB[] = [{
+export let postsMock: PostDB[] = [{
     id: "id-mock-post-fulano",
     creator_id: "id-mock-fulano",
     content: "Bananinha",
@@ -36,14 +36,14 @@ export class PostDatabaseMock extends BaseDatabase {
 
     public createPost = async (NewPostDB: PostDB) => {
 
-       postsMock.push(NewPostDB)
+        postsMock.push(NewPostDB)
 
     }
 
-    public editPost = async (id: string, content: string):Promise<void> => {
+    public editPost = async (id: string, content: string): Promise<void> => {
 
-    postsMock.map((post)=>{
-            if(post.id === id){
+        postsMock.map((post) => {
+            if (post.id === id) {
                 post.content = content
             }
 
@@ -55,62 +55,38 @@ export class PostDatabaseMock extends BaseDatabase {
 
     public deletePost = async (id: string) => {
 
-        postsMock.filter((post)=> post.id !==id)
+        postsMock = postsMock.filter((post) => post.id !== id)
 
     }
 
     public likePost = async (likesNumber: number, dislikesNumber: number, post_id: string, user_id: string, isLiked: number) => {
 
-        postsMock.map((post)=>{
-            if(post.id === post_id){
+        postsMock = postsMock.map((post) => {
+            if (post.id === post_id) {
                 post.likes = likesNumber
                 post.dislikes = dislikesNumber
             }
+
+            return post
         })
-
-
-        // if (isLiked === 3) {
-        //     await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).delete().where({ post_id, user_id })
-        // }
-
-        // await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).update({ like: 1 }).where({ post_id, user_id })
-
     }
 
     public dislikePost = async (likesNumber: number, dislikesNumber: number, post_id: string, user_id: string, isLiked: number) => {
 
-        postsMock.map((post)=>{
-            if(post.id === post_id){
+        postsMock.map((post) => {
+            if (post.id === post_id) {
                 post.likes = likesNumber
                 post.dislikes = dislikesNumber
             }
         })
-
-
-        // if (isLiked === 3) {
-        //     await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).delete().where({ post_id, user_id })
-        // }
-
-        // await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).update({ like: 0 }).where({ post_id, user_id })
 
     }
 
     public verifyLike = async (post_id: string, user_id: string) => {
 
-        // let [likes_dislikes] = await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).where({ post_id, user_id })
 
         let isLiked = 0
 
-        // if (!likes_dislikes) {
-        //     await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).insert({ user_id, post_id, like: 2 }).where({ post_id, user_id });
-
-        //     [likes_dislikes] = await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES).where({ post_id, user_id })
-
-        //     isLiked = likes_dislikes.like
-        // }
-        // else if (likes_dislikes) {
-        //     isLiked = likes_dislikes.like
-        // }
 
         return isLiked
     }

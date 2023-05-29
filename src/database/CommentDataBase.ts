@@ -13,7 +13,6 @@ export class CommentDatabase extends BaseDatabase {
 
         const users = await BaseDatabase.connection(CommentDatabase.TABLE_USERS)
 
-        // console.log(comments)
         return [comments, users]
     }
 
@@ -23,8 +22,6 @@ export class CommentDatabase extends BaseDatabase {
     }
 
     public likeComment = async (likesNumber: number, dislikesNumber: number, id: string, userId: string, isLiked:number) => {
-
-        console.log(likesNumber)
         
         await BaseDatabase.connection(CommentDatabase.TABLE_COMMENTS).update({likes: likesNumber, dislikes: dislikesNumber}).where({id})
 

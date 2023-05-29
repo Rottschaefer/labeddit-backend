@@ -48,7 +48,6 @@ export class PostController {
         try {
 
             const input = CreatePostSchema.parse({
-                // creator_id: req.body.creatorId,
                 content: req.body.content,
                 token: req.headers.authorization
             })

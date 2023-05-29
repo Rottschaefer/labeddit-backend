@@ -2,7 +2,6 @@ import { USER_ROLES } from "../../models/User";
 import z from "zod";
 
 export interface SignUpInputUserDTO {
-    // id: string,
     name: string,
     email: string,
     password: string,
@@ -13,13 +12,7 @@ export interface SignUpOutputUserDTO {
 }
 
 export const SignUpSchema = z.object({
-    // id: z
-    // .string({
-    //   required_error: "'id' é obrigatória",
-    //   invalid_type_error: "'id' deve ser do tipo string"
-    // })
-    // .min(1, "'id' deve possuir no mínimo 1 caractere"),
-
+  
   name: z
     .string({
       required_error: "'name' é obrigatório",

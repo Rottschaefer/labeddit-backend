@@ -18,8 +18,6 @@ describe("Testando getPosts", ()=>{
 
         const postsMockModel = await postBusiness.getPosts({token: "token-mock-fulano"})
 
-        console.log(postsMockModel)
-
         expect(postsMockModel).toEqual([{
             id: "id-mock-post-fulano",
             content: "Bananinha",
