@@ -75,6 +75,9 @@ Para esse projeto são modeladas três tabelas principais : **Usuários (users),
 
 - **Caminho para utilizar a API via requisições HTTP:** https://labeddit-backend-npai.onrender.com
 
+- **Link da documentação:** https://documenter.getpostman.com/view/25837050/2s93m8xfNQ
+
+
 ---
 
 
